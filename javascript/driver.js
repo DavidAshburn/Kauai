@@ -1,15 +1,15 @@
-import { DomEl } from './dome.js';
+import { DomEl, IDgen } from './dome.js';
 
-let page = new DomEl('body','body','html');
+const manifest = new IDgen();
+const body = new DomEl('body',manifest.add(),'html');
 
-page.append(new DomEl('p','subtitle','body','subtitle',"subtitle text"));
-page.append(new DomEl('div','inner','body','blank'));
+body.append(new DomEl('p',manifest.add(),body.id,'subtitle',"subtitle text"));
+body.append(new DomEl('div',manifest.add(),body.id,'blank',"div text"));
+
+body.prepend(new DomEl('h1',manifest.add(),body.id,'title',"Welcome Stranger"));
 
 
+body.draw();
+body.log();
 
-let first = new DomEl('p','title','body','title',"Title text");
-page.prepend(first);
-
-page.draw();
-
-console.log("hi");
+manifest.log();
