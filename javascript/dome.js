@@ -1,4 +1,12 @@
-export class DomEl {
+export function add(type,id,parent,style ="", text ="") {
+	return new DomEl(type,id,parent,style,text);
+}
+
+export function state() {
+	return new IDgen();
+}
+
+class DomEl {
 	constructor(type, id, parent, style = "", text = "") {
 		this.type = type;
 		this.id = id;
@@ -8,14 +16,14 @@ export class DomEl {
 		this.text = text;
 	}
 	
-	append(el) {
+	addChild(el) {
 		if(!el instanceof DomEl)
 			return false;
 		this.children.push(el);
 		return true;
 	}
 
-	prepend(el) {
+	unshiftChild(el) {
 		if(!el instanceof DomEl)
 			return false;
 		this.children.unshift(el);
@@ -78,7 +86,7 @@ export class DomEl {
 }
 
 //unique id generator to label all our elements
-export class IDgen {
+class IDgen {
 	constructor() {
 		this.list = [];
 	}
