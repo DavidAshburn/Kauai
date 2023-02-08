@@ -17,3 +17,11 @@ body {
 	font-family: 'Josefin Slab',serif;
 	font-size: 2rem;
 }
+
+.flex-col1 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+	width: 100%;
+}

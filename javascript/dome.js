@@ -10,13 +10,31 @@ class vDom {
 		this.manifest.add();
 
 		this.root_element = document.getElementById("0");
-		this.manifest.log();
 	}
 
+	//log the DomEl with 'id'
+	log(id) {
+		console.log(this.root.dig(id));
+	}
+
+	// true/false
+	has(id) {
+		return this.manifest.has(id);
+	}
+
+	// true/false for success
 	remove(id) {
-		return this.manifest.remove(id);
+		// if its in the manifest and removed from it
+		if(this.manifest.remove(id)) {
+			//dig for the DomEL with 'id' and remove it from it's parent
+			let parent_id = this.root.dig(id).parent;
+			this.root.dig(parent_id).removeChild(id);
+			return true;
+		}
+		return false;
 	}
 
+	//returns DomEl with 'id' or false
 	get(id) {
 		if(id === 0) {
 			return this.root;
@@ -27,18 +45,16 @@ class vDom {
 		return false;
 	}
 
+	//this returns the new DomEl's id for reference later
+	//DomEl's with text get a TextNode generated within them that is not a DomEl
 	add(type,parent,style="",text="") {
 		let found = this.get(parent);
 		if(found === false) {
-			console.log('notfound on add');
 			return false;
 		}
-		found.addChild(new DomEl(type,this.manifest.add(),parent,style,text));
-		return true;
-	}
-
-	has(id) {
-		return this.manifest.has(id);
+		let newID = this.manifest.add();
+		found.addChild(new DomEl(type,newID,parent,style,text));
+		return newID;
 	}
 
 	draw() {
@@ -52,7 +68,8 @@ class DomEl {
 		this.id = id;
 		this.parent = parent;
 		this.children = [];
-		this.style = style;
+		if(this.style !== "")
+			this.style = style.split(' ');
 		this.text = text;
 	}
 	
@@ -70,6 +87,24 @@ class DomEl {
 		return true;
 	}
 
+	removeChild(id) {
+		for(let i = 0; i < this.children.length; i++) {
+			if(this.children[i].id === id) {
+				if(i === 0) {
+					this.children.shift();
+					return true;
+				}
+				if(i === this.children.length - 1) {
+					this.children.pop();
+					return true;
+				}
+				this.children = this.children.slice(0,i).concat(this.children.slice(i+1));
+				return true;
+			}
+		}
+		return false;
+	}
+
 	get(id) {
 		for(let item of this.children) {
 			if(item.id === id) {
@@ -79,27 +114,18 @@ class DomEl {
 		return false;
 	}
 
-	//untested
 	dig(id) {
 		for(let item of this.children) {
 			if(item.id === id) {
 				return item;
 			} else {
 				let subdig = item.dig(id);
-				if(subdig !== false)
+				if(subdig !== false) {
 					return subdig;
+				}
 			}
 		}
 		return false;
-	}
-
-	addText(type,id,style,text) {
-		let p = document.createElement('p');
-		p,id = id;
-		p.parent = this.id;
-		p.classList.add(this.style);
-		p.appendChild(document.createTextNode(text));
-		parent.appendChild(p);
 	}
 
 	draw() {
@@ -107,7 +133,13 @@ class DomEl {
 		
 		for(let item of this.children) {
 			let child = document.createElement(item.type);
-			child.classList.add(item.style);
+
+
+			if(item.style !== "") {
+				for(let css_class of item.style) {
+					child.classList.add(css_class);
+				}
+			}
 			child.id = item.id;
 			if(item.text !== "") {
 				child.appendChild(document.createTextNode(item.text));
@@ -149,13 +181,13 @@ class IDgen {
 	}
 
 	remove(id) {
-		for(let i = 0; i < this.list.size; i++) {
+		for(let i = 0; i < this.list.length; i++) {
 			if(this.list[i] === id) {
 				if(i === 0) {
 					this.list.shift();
 					return true;
 				}
-				if(i === this.list.size - 1) {
+				if(i === this.list.length - 1) {
 					this.list.pop();
 					return true;
 				}
