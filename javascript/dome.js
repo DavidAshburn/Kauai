@@ -1,9 +1,49 @@
-export function add(type,id,parent,style ="", text ="") {
-	return new DomEl(type,id,parent,style,text);
+
+export function init() {
+	return new vDom();
 }
 
-export function state() {
-	return new IDgen();
+class vDom {
+	constructor() {
+		this.manifest = new IDgen();
+		this.root = new DomEl('body',0,'html');
+		this.manifest.add();
+
+		this.root_element = document.getElementById("0");
+		this.manifest.log();
+	}
+
+	remove(id) {
+		return this.manifest.remove(id);
+	}
+
+	get(id) {
+		if(id === 0) {
+			return this.root;
+		}
+		if(this.manifest.has(id)) {
+			return this.root.dig(id);
+		}
+		return false;
+	}
+
+	add(type,parent,style="",text="") {
+		let found = this.get(parent);
+		if(found === false) {
+			console.log('notfound on add');
+			return false;
+		}
+		found.addChild(new DomEl(type,this.manifest.add(),parent,style,text));
+		return true;
+	}
+
+	has(id) {
+		return this.manifest.has(id);
+	}
+
+	draw() {
+		this.root.draw();
+	}
 }
 
 class DomEl {
@@ -21,7 +61,7 @@ class DomEl {
 			return false;
 		this.children.push(el);
 		return true;
-	}
+	} 
 
 	unshiftChild(el) {
 		if(!el instanceof DomEl)
@@ -91,7 +131,7 @@ class IDgen {
 		this.list = [];
 	}
 
-	find(val) {
+	has(val) {
 		for(let item of this.list) {
 			if(item === val)
 				return true;
@@ -101,7 +141,7 @@ class IDgen {
 
 	add() {
 		let i = 0;
-		while(this.find(i)) {
+		while(this.has(i)) {
 			i++;
 		}
 		this.list.push(i);
