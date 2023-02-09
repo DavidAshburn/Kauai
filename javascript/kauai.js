@@ -9,20 +9,23 @@ export function dom_el(type,style="",text="") {
 }
 
 //used as a container for DomEls so we can build components
-export function fragment(type,style="",text="") {
-	return new Fragment(type,style,text);
+export function fragment(type,style="",...children) {
+	return new Fragment(type,style,...children);
 }
 
 class Fragment {
-	//compose will assign the id and parent
-	constructor(type,style,text) {
-		this.root = new DomEl(type,-1,-1,style,text);
+	//vDom.compose will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
+	constructor(type,style, ...children) {
+		this.root = new DomEl(type,-1,-1,style);
+		for(let item of children) {
+			this.root.addChild(item);
+		}
 	}
 
 	//add DomEl to fragment, default parent is root but a different DomEl
 	//can be designated if you want
 	add(new_el,dom_el = this.root) {
-		dom_el.children.push(new_el);
+		dom_el.addChild(new_el);
 	}
 
 	//compose will call this to assign id and parent for all elements in 
