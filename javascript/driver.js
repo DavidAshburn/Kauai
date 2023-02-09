@@ -5,10 +5,10 @@ const vDom = Kauai.init();
 
 let header = "Kauai.js";
 let tagline = "Take a vacation.";
-vDom.compose(Fragments.title(header,tagline), 0);
+vDom.render(Fragments.title(header,tagline));
 
-vDom.compose(Fragments.subsection(), 0);
+vDom.render(Fragments.subsection());
 
-vDom.compose(Fragments.add_kids(), 0);
+vDom.render(Fragments.add_kids());
 
 vDom.draw();

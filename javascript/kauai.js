@@ -14,7 +14,7 @@ export function fragment(type,style="",...children) {
 }
 
 class Fragment {
-	//vDom.compose will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
+	//vDom.render will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
 	constructor(type,style, ...children) {
 		this.root = new DomEl(type,-1,-1,style);
 		for(let item of children) {
@@ -28,7 +28,7 @@ class Fragment {
 		dom_el.addChild(new_el);
 	}
 
-	//compose will call this to assign id and parent for all elements in 
+	//vDom.render will call this to assign id and parent for all elements in 
 	//the fragment, we pass in manifest to have access to it from the call
 	//in the js driver file
 	assignIds(manifest) {
@@ -113,8 +113,8 @@ class vDom {
 		this.root.draw();
 	}
 
-	//integrate a fragment at the correct place in root descendants
-	compose(fragment,parent) {
+	//integrate a fragment into the vDom, optionally specify a parent id to nest within a vDom descendant
+	render(fragment,parent = 0) {
 		fragment.root.parent = parent;
 		fragment.assignIds(this.manifest);
 		this.root.dig(parent).addChild(fragment.root);
@@ -124,7 +124,7 @@ class vDom {
 class DomEl {
 	//style is a string of classnames separated by spaces
 	//both this and text are optional
-	//when constructor is called inside a fragment, the vDom.compose call will 
+	//when constructor is called inside a fragment, the vDom.render call will 
 	//assign id and parent, so set these to -1
 	constructor(type, id, parent, style = "", text = "") {
 		this.type = type;
