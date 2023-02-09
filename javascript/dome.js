@@ -16,7 +16,7 @@ class Fragment {
 		this.root = new DomEl(type,-1,-1,style,text);
 	}
 
-	add(dom_el,new_el) {
+	add(new_el,dom_el = this.root) {
 		dom_el.children.push(new_el);
 	}
 
@@ -124,13 +124,6 @@ class DomEl {
 		this.children.push(el);
 		return true;
 	} 
-
-	unshiftChild(el) {
-		if(!el instanceof DomEl)
-			return false;
-		this.children.unshift(el);
-		return true;
-	}
 
 	removeChild(id) {
 		for(let i = 0; i < this.children.length; i++) {

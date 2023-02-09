@@ -3,27 +3,10 @@ import * as Fragments from './fragments.js';
 
 const vDom = Dome.init();
 
-vDom.compose(Fragments.title(), 0);
+let header = "Dome.js";
+let tagline = "It's a real dumpster fire in here.";
+vDom.compose(Fragments.title(header,tagline), 0);
 
 vDom.compose(Fragments.subsection(), 0)
 
 vDom.draw();
-
-/*
-{root
-	{title
-	}
-	{maindiv
-		subtitle1
-		subtitle2
-		{frag
-			fragment title
-			fragment subtitle
-			{subdiv
-				inside subdiv1
-				inside subdiv2
-			}
-		}
-	}
-}
-*/

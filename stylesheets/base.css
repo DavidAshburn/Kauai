@@ -11,6 +11,7 @@ body {
 .title {
 	font-family: 'Aboreto',serif;
 	font-size: 4rem;
+	padding:1rem;
 }
 
 .subtitle {
