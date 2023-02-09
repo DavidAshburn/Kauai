@@ -1,14 +1,15 @@
-//first call initializes our vDom and manifest
+//first call in driver.js initializes our vDom and manifest
 export function init() {
 	return new vDom();
 }
 
-//used in Fragment exports to generate DomEls
+//used in fragments.js to generate DomEls
 export function dom_el(type,style="",text="") {
 	return new DomEl(type, -1, -1,style,text);
 }
 
-//used as a container for DomEls so we can build components
+//used in fragments.js as a container for DomEls so we can build components
+//children are DomEls that will be appended to the fragment root
 export function fragment(type,style="",...children) {
 	return new Fragment(type,style,...children);
 }
