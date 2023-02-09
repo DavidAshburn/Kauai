@@ -4,10 +4,15 @@ const vDom = Dome.init();
 
 vDom.add('p',0,'title flex-col1','Title Text');
 
-let maindiv_id = vDom.add('div',0,'flex-col1');
-let maindiv = vDom.root.dig(maindiv_id);
-maindiv.addChild(Dome.dom_el('p','subtitle','subtitle1'))
-maindiv.addChild(Dome.dom_el('p','subtitle','subtitle2'))
+let maindiv = Dome.fragment('div','flex-col1');
+let mdsub = Dome.dom_el('p','subtfitle','subtitle 1');
+let mdsub2 = Dome.dom_el('p','subtfitle','subtitle 2');
+
+maindiv.add(maindiv.root,mdsub);
+maindiv.add(maindiv.root,mdsub2);
+
+vDom.compose(maindiv, 0);
+let maindiv_id = maindiv.root.id;
 
 let frag = Dome.fragment('div','flex-col1');
 

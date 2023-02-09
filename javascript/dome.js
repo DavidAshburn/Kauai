@@ -160,6 +160,8 @@ class DomEl {
 	}
 
 	dig(id) {
+		if(id === this.id)
+			return this;
 		for(let item of this.children) {
 			if(item.id === id) {
 				return item;
