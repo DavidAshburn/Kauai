@@ -20,6 +20,10 @@ from /kauai directory
 
 driver.js calls Kauai.init() to establish our vDom and state object, it assembles our html page from Fragments with render(), and then calls draw() to put the vDOM onto the page.
 
+vDom
+	contains an array of virtual dom elements, each has an array of children that will render as nested elements
+	contains the IDgen object that will keep track of what's live on page
+
 init()
 	creates vDom
 	creates manifest which tracks and assigns ids to new elements
@@ -45,14 +49,15 @@ Fragments
 
 	//////
 
-	In this example, we export the function to start and take in params for our title and subtitle text.
-	we instantiate the Fragment, declare it's children, add them to their respective parent children[] arrays, then return the fragment.
+	we instantiate the Fragment and it's root element, declare it's children, add them to the fragment root or explicit parents, then return the fragment.
 
-	this returned fragment has elements with -1 for their id and parent values.
-	render will bring in the IDgen named manifest, which allows us to assign unique ids to these as well as determine their parent ids.
+	this returned fragment has -1 as both id and parent values.
+	render will bring in the IDgen, which allows us to assign unique ids to these as well as determine their parent ids.
 
 DomEls
 	these are the vDom representations of html elements, you can assign the type, css_classes and innerText, render() will set up the id and parent_id for you as long as the DomEl is part of a Fragment. 
+
+	You can make your own dom elements and put them wherever you want, but you have to call manifest.add() for the id and figure out the parent id yourself so you can assign domel.parent and assign your new element to the parent with parent.addChild(domel)
 
 	///////  kauai.js
 
