@@ -1,9 +1,9 @@
-import * as Dome from './dome.js';
+import * as Kauai from './kauai.js';
 import * as Fragments from './fragments.js';
 
-const vDom = Dome.init();
+const vDom = Kauai.init();
 
-let header = "Dome.js";
+let header = "Kauai.js";
 let tagline = "It's a real dumpster fire in here.";
 vDom.compose(Fragments.title(header,tagline), 0);
 

@@ -1,10 +1,10 @@
-import * as Dome from './dome.js'
+import * as Kauai from './kauai.js'
 
 export function title(main,sub) {
-	let frag = Dome.fragment('div','flex-col1');
-	let title = Dome.dom_el('p','title',main);
-	let row = Dome.dom_el('div','flex-row');
-	let mdsub = Dome.dom_el('p','subtitle',sub);
+	let frag = Kauai.fragment('div','flex-col1');
+	let title = Kauai.dom_el('p','title',main);
+	let row = Kauai.dom_el('div','flex-row');
+	let mdsub = Kauai.dom_el('p','subtitle',sub);
 
 	frag.add(title);
 	frag.add(row);
@@ -13,12 +13,12 @@ export function title(main,sub) {
 }
 
 export function subsection() {
-	let frag = Dome.fragment('div','flex-col1');
-	let ftitle = Dome.dom_el('p','title',"fragment title");
-	let fsubtitle = Dome.dom_el('p','subtitle',"fragment subtitle");
-	let subdiv = Dome.dom_el('div','flex-row');
-	let subdiv1 = Dome.dom_el('p','list-item','inside fragdiv 1');
-	let subdiv2 = Dome.dom_el('p','list-item','inside fragdiv 2');
+	let frag = Kauai.fragment('div','flex-col1');
+	let ftitle = Kauai.dom_el('p','title',"fragment title");
+	let fsubtitle = Kauai.dom_el('p','subtitle',"fragment subtitle");
+	let subdiv = Kauai.dom_el('div','flex-row');
+	let subdiv1 = Kauai.dom_el('p','list-item','inside fragdiv 1');
+	let subdiv2 = Kauai.dom_el('p','list-item','inside fragdiv 2');
 
 	frag.add(ftitle);
 	frag.add(fsubtitle);
