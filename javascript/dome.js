@@ -1,25 +1,33 @@
-
+//first call initializes our vDom and manifest
 export function init() {
 	return new vDom();
 }
 
+//used in Fragment exports to generate DomEls
 export function dom_el(type,style="",text="") {
 	return new DomEl(type, -1, -1,style,text);
 }
 
+//used as a container for DomEls so we can build components
 export function fragment(type,style="",text="") {
 	return new Fragment(type,style,text);
 }
 
 class Fragment {
+	//compose will assign the id and parent
 	constructor(type,style,text) {
 		this.root = new DomEl(type,-1,-1,style,text);
 	}
 
+	//add DomEl to fragment, default parent is root but a different DomEl
+	//can be designated if you want
 	add(new_el,dom_el = this.root) {
 		dom_el.children.push(new_el);
 	}
 
+	//compose will call this to assign id and parent for all elements in 
+	//the fragment, we pass in manifest to have access to it from the call
+	//in the js driver file
 	assignIds(manifest) {
 		const assignChildren = function(domel,manifest) {
 			for(let child of domel.children) {
@@ -64,7 +72,7 @@ class vDom {
 		return false;
 	}
 
-	//returns DomEl with 'id' or false
+	//returns DomEl or false, checks all descendants with dig()
 	get(id) {
 		if(id === 0) {
 			return this.root;
@@ -87,6 +95,7 @@ class vDom {
 		return newID;
 	}
 
+	//append a DomEl to a parent, DomEl must already have parent assigned
 	append(el) {
 		let found = this.get(el.parent);
 		if(found === false) {
@@ -96,10 +105,12 @@ class vDom {
 		return true;
 	}
 
+	//draw all elements again, starting at the root
 	draw() {
 		this.root.draw();
 	}
 
+	//integrate a fragment at the correct place in root descendants
 	compose(fragment,parent) {
 		fragment.root.parent = parent;
 		fragment.assignIds(this.manifest);
@@ -108,6 +119,10 @@ class vDom {
 }
 
 class DomEl {
+	//style is a string of classnames separated by spaces
+	//both this and text are optional
+	//when constructor is called inside a fragment, the vDom.compose call will 
+	//assign id and parent, so set these to -1
 	constructor(type, id, parent, style = "", text = "") {
 		this.type = type;
 		this.id = id;
@@ -118,6 +133,8 @@ class DomEl {
 		this.text = text;
 	}
 	
+	//this makes sure objects are DomEls before adding them to this.children
+	//return true/false for success check
 	addChild(el) {
 		if(!el instanceof DomEl)
 			return false;
@@ -125,6 +142,8 @@ class DomEl {
 		return true;
 	} 
 
+	//this takes children with 'id' out of the children array
+	//return true/false for success check
 	removeChild(id) {
 		for(let i = 0; i < this.children.length; i++) {
 			if(this.children[i].id === id) {
@@ -143,15 +162,7 @@ class DomEl {
 		return false;
 	}
 
-	get(id) {
-		for(let item of this.children) {
-			if(item.id === id) {
-				return item;
-			}
-		}
-		return false;
-	}
-
+	//returns a DomEl or false, checks all descendant children
 	dig(id) {
 		if(id === this.id)
 			return this;
@@ -168,6 +179,8 @@ class DomEl {
 		return false;
 	}
 
+	//createElement for all descendant DomEls, I call this on the root element
+	//since it's the only one that is in the html by default
 	draw() {
 		let parent = document.getElementById(this.id);
 		
@@ -204,6 +217,7 @@ class IDgen {
 		return false;
 	}
 
+	//generate a unique id, store in this.list and return it
 	add() {
 		let i = 0;
 		while(this.has(i)) {
@@ -229,9 +243,5 @@ class IDgen {
 			}
 		}
 		return false;
-	}
-
-	log() {
-		console.log(this.list);
 	}
 }
