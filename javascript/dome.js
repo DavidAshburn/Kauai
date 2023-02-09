@@ -3,9 +3,39 @@ export function init() {
 	return new vDom();
 }
 
+export function dom_el(type,style="",text="") {
+	return new DomEl(type, -1, -1,style,text);
+}
+
+export function fragment(type,style="",text="") {
+	return new Fragment(type,style,text);
+}
+
+class Fragment {
+	constructor(type,style,text) {
+		this.root = new DomEl(type,-1,-1,style,text);
+	}
+
+	add(dom_el,new_el) {
+		dom_el.children.push(new_el);
+	}
+
+	assignIds(manifest) {
+		const assignChildren = function(domel,manifest) {
+			for(let child of domel.children) {
+				child.id = manifest.add();
+				child.parent = domel.id;
+				assignChildren(child,manifest);
+			}
+		}
+		this.root.id = manifest.add();
+		assignChildren(this.root,manifest);
+	}
+}
+
 class vDom {
 	constructor() {
-		this.manifest = new IDgen();
+		this.manifest = new IDgen;
 		this.root = new DomEl('body',0,'html');
 		this.manifest.add();
 
@@ -57,8 +87,23 @@ class vDom {
 		return newID;
 	}
 
+	append(el) {
+		let found = this.get(el.parent);
+		if(found === false) {
+			return false;
+		}
+		found.addChild(el);
+		return true;
+	}
+
 	draw() {
 		this.root.draw();
+	}
+
+	compose(fragment,parent) {
+		fragment.root.parent = parent;
+		fragment.assignIds(this.manifest);
+		this.root.dig(parent).addChild(fragment.root);
 	}
 }
 
@@ -201,5 +246,4 @@ class IDgen {
 	log() {
 		console.log(this.list);
 	}
-
 }
