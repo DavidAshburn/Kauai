@@ -188,13 +188,6 @@ class DomEl {
 			item.draw();
 		}
 	}
-
-	log() {
-		console.log(this.type,this.id,this.parent,this.children.length);
-		for(let item of this.children) {
-			item.log();
-		}
-	}
 }
 
 //unique id generator to label all our elements

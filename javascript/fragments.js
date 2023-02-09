@@ -17,12 +17,13 @@ export function subsection() {
 	let ftitle = Dome.dom_el('p','title',"fragment title");
 	let fsubtitle = Dome.dom_el('p','subtitle',"fragment subtitle");
 	let subdiv = Dome.dom_el('div','flex-row');
+	let subdiv1 = Dome.dom_el('p','list-item','inside fragdiv 1');
+	let subdiv2 = Dome.dom_el('p','list-item','inside fragdiv 2');
 
 	frag.add(ftitle);
 	frag.add(fsubtitle);
 	frag.add(subdiv);
-
-	subdiv.addChild(Dome.dom_el('p','list-item','inside fragdiv 1'));
-	subdiv.addChild(Dome.dom_el('p','list-item','inside fragdiv 2'));
+	frag.add(subdiv1,subdiv)
+	frag.add(subdiv2,subdiv);
 	return frag;
 }
