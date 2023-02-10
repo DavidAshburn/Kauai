@@ -5,8 +5,6 @@ export function title(main,sub) {
 	let row = Kauai.dom_el('div','flex-row-even');
 	let mdsub = Kauai.dom_el('p','subtitle',sub);
 
-	let row = Kauai.dom_el('div','flex-row');
-
 	row.addChild(Kauai.dom_el('p','subtitle',sub));
 
 	return Kauai.fragment('div','flex-col1',title,row);
