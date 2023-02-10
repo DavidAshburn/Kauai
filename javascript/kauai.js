@@ -14,42 +14,6 @@ export function fragment(type,style="",...children) {
 	return new Fragment(type,style,...children);
 }
 
-class Fragment {
-	//vDom.render will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
-	//events branch // for type == 'button', pass in text for the button instead of ...children
-	constructor(type,style, ...children) {
-		if(type === 'button') {
-			this.root = new DomEl(type,-1,-1,style,children[0]);
-		} else {
-			this.root = new DomEl(type,-1,-1,style);
-			for(let item of children) {
-				this.root.addChild(item);
-			}
-		}
-	}
-
-	//add DomEl to fragment, default parent is root but a different DomEl
-	//can be designated if you want
-	add(new_el,dom_el = this.root) {
-		dom_el.addChild(new_el);
-	}
-
-	//vDom.render will call this to assign id and parent for all elements in 
-	//the fragment, we pass in manifest to have access to it from the call
-	//in the js driver file
-	assignIds(manifest) {
-		const assignChildren = function(domel,manifest) {
-			for(let child of domel.children) {
-				child.id = manifest.add();
-				child.parent = domel.id;
-				assignChildren(child,manifest);
-			}
-		}
-		this.root.id = manifest.add();
-		assignChildren(this.root,manifest);
-	}
-}
-
 class vDom {
 	constructor() {
 		this.manifest = new IDgen;
@@ -67,11 +31,6 @@ class vDom {
 	// true/false
 	has(id) {
 		return this.manifest.has(id);
-	}
-
-	// events branch //
-	get_remove() {
-		return id => this.remove(id);  
 	}
 
 	// true/false for success
@@ -99,7 +58,7 @@ class vDom {
 	}
 
 	//this returns the new DomEl's id for reference later
-	//DomEl's with text get a TextNode generated within them that is not a DomEl
+	//DomEl's with text get a nested TextNode generated in draw() that isn't a DomEl
 	add(type,parent,style="",text="") {
 		let found = this.get(parent);
 		if(found === false) {
@@ -138,7 +97,7 @@ class DomEl {
 	//both this and text are optional
 	//when constructor is called inside a fragment, the vDom.render call will 
 	//assign id and parent, so set these to -1
-	constructor(type, id, parent, style = "", text = "") {
+	constructor(type, id, parent, style = "", text = "",css = "") {
 		this.type = type;
 		this.id = id;
 		this.parent = parent;
@@ -146,6 +105,7 @@ class DomEl {
 		if(this.style !== "")
 			this.style = style.split(' ');
 		this.text = text;
+		this.css = css;
 
 		// events branch //
 		this.listeners = [];
@@ -228,8 +188,53 @@ class DomEl {
 			for(let ear of item.listeners) {
 				child.addEventListener(ear.type,ear.callback);
 			}
+
+			if(item.css !== "") {
+				child.style = item.css;
+			}
+
 			item.draw();
 		}
+	}
+
+	set_css(text) {
+		this.css = text;
+	}
+}
+
+class Fragment {
+	//vDom.render will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
+	//events branch // for type == 'button', pass in text for the button instead of ...children
+	constructor(type,style, ...children) {
+		if(type === 'button') {
+			this.root = new DomEl(type,-1,-1,style,children[0]);
+		} else {
+			this.root = new DomEl(type,-1,-1,style);
+			for(let item of children) {
+				this.root.addChild(item);
+			}
+		}
+	}
+
+	//add DomEl to fragment, default parent is root but a different DomEl
+	//can be designated if you want
+	add(new_el,dom_el = this.root) {
+		dom_el.addChild(new_el);
+	}
+
+	//vDom.render will call this to assign id and parent for all elements in 
+	//the fragment, we pass in manifest to have access to it from the call
+	//in the js driver file
+	assignIds(manifest) {
+		const assignChildren = function(domel,manifest) {
+			for(let child of domel.children) {
+				child.id = manifest.add();
+				child.parent = domel.id;
+				assignChildren(child,manifest);
+			}
+		}
+		this.root.id = manifest.add();
+		assignChildren(this.root,manifest);
 	}
 }
 

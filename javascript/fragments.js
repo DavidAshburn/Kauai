@@ -9,12 +9,14 @@ export function title(main,sub) {
 	return Kauai.fragment('div','flex-col1',title,row);
 }
 
-// events branch //
-export function button(func) {
-	let frag = Kauai.fragment('button','btn-green','Click Me');
+// events branch //\
+export function button(demolish) {
+	let frag = Kauai.fragment('button','btn-green','Remove Me');
+
+	frag.root.css = "font-family: 'Aboreto',serif;";
+	frag.root.css += "font-size: 30px;";
 	frag.root.addListener('click',() => {
-		console.log("clicked me");
-		func(5);
+		demolish(5);
 	});
 	return frag;
 }
