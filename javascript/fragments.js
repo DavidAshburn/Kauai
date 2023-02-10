@@ -10,13 +10,13 @@ export function title(main,sub) {
 }
 
 // events branch //\
-export function button(demolish) {
+export function button(method, ...params) {
 	let frag = Kauai.fragment('button','btn-green','Remove Me');
 
 	frag.root.css = "font-family: 'Aboreto',serif;";
 	frag.root.css += "font-size: 30px;";
 	frag.root.addListener('click',() => {
-		demolish(5);
+		method(...params)
 	});
 	return frag;
 }

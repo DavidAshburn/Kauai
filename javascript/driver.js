@@ -9,6 +9,6 @@ vDom.render(Fragments.title(header,tagline));
 
 // events branch //
 const demolish = val => vDom.remove(val);
-vDom.render(Fragments.button(demolish));
+vDom.render(Fragments.button(demolish, 5));
 
 vDom.draw();
