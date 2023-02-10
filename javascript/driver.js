@@ -7,8 +7,6 @@ let header = "Kauai.js";
 let tagline = "Take a vacation.";
 vDom.render(Fragments.title(header,tagline));
 
-vDom.render(Fragments.subsection());
-
-vDom.render(Fragments.add_kids());
+vDom.render(Fragments.toylist());
 
 vDom.draw();
