@@ -7,6 +7,7 @@ let header = "Kauai.js";
 let tagline = "Take a vacation.";
 vDom.render(Fragments.title(header,tagline));
 
-vDom.render(Fragments.toylist());
+const demolish = val => vDom.remove(val);
+vDom.render(Fragments.button(demolish, 5));
 
 vDom.draw();
