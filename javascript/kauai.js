@@ -16,10 +16,15 @@ export function fragment(type,style="",...children) {
 
 class Fragment {
 	//vDom.render will assign the id and parent, vDom.manifest needs to be visible to assign correct IDs
+	//events branch // for type == 'button', pass in text for the button instead of ...children
 	constructor(type,style, ...children) {
-		this.root = new DomEl(type,-1,-1,style);
-		for(let item of children) {
-			this.root.addChild(item);
+		if(type === 'button') {
+			this.root = new DomEl(type,-1,-1,style,children[0]);
+		} else {
+			this.root = new DomEl(type,-1,-1,style);
+			for(let item of children) {
+				this.root.addChild(item);
+			}
 		}
 	}
 
@@ -64,6 +69,11 @@ class vDom {
 		return this.manifest.has(id);
 	}
 
+	// events branch //
+	get_remove() {
+		return id => this.remove(id);  
+	}
+
 	// true/false for success
 	remove(id) {
 		// if its in the manifest and removed from it
@@ -71,6 +81,7 @@ class vDom {
 			//dig for the DomEL with 'id' and remove it from it's parent
 			let parent_id = this.root.dig(id).parent;
 			this.root.dig(parent_id).removeChild(id);
+			document.getElementById(id).remove();
 			return true;
 		}
 		return false;
@@ -135,6 +146,9 @@ class DomEl {
 		if(this.style !== "")
 			this.style = style.split(' ');
 		this.text = text;
+
+		// events branch //
+		this.listeners = [];
 	}
 	
 	//this makes sure objects are DomEls before adding them to this.children
@@ -164,6 +178,13 @@ class DomEl {
 			}
 		}
 		return false;
+	}
+
+	// events branch //
+	// render() will need to instantiate these listeners
+	addListener(type,callback) {
+		let item = {type,callback};
+		this.listeners.push(item);
 	}
 
 	//returns a DomEl or false, checks all descendant children
@@ -202,6 +223,11 @@ class DomEl {
 				child.appendChild(document.createTextNode(item.text));
 			}
 			parent.appendChild(child);
+
+			// events branch //
+			for(let ear of item.listeners) {
+				child.addEventListener(ear.type,ear.callback);
+			}
 			item.draw();
 		}
 	}
